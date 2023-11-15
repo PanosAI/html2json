@@ -4,7 +4,7 @@ import multiprocessing
 from multiprocessing import Pool, freeze_support
 from tqdm import tqdm
 from pathlib import Path
-from html2jsonUp import collect
+from html2json.html2jsonUp import collect
 from pyquery import PyQuery
 import re
 import openstack
@@ -56,7 +56,7 @@ if __name__ == '__main__':
     
 
 
-    with open('template.json', 'r', encoding='utf-8') as tp:
+    with open('./html2json/template.json', 'r', encoding='utf-8') as tp:
         template = json.load(tp)
         
         pool = Pool(processes=max_processes)
