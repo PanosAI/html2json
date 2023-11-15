@@ -1,0 +1,99 @@
+{
+    "job": {
+        "companyDetails":{"company":[
+            "a.face-pile__cta",
+            "href",
+            ["/(?<=facetCurrentCompany%3D).+?(?=%)/" ,"s/^/urn:li:fs_normalized_company:/"]
+        ]},
+        
+        "standardizedTitleResolutionResult":{
+            "$recipeType": ["img.artdeco-entity-image","alt",["s/.+/com.linkedin.voyager.deco.jobs.web.shared.WebFullTitle/"]],
+            "entityUrn": ["img.artdeco-entity-image","alt",["s/.+//"]],
+            "localizedName": ["a.face-pile__cta","href",["/(?<=title%3D).+?(?=&)/", "s/%2B/ /g"]]
+        }
+        
+        ,
+        "sourceHtml":{
+            "ListedRelative":["span.posted-time-ago__text",null,[]],   
+            "CrawledAt":["span.creation-time",null,[]],
+            "$type":["img.artdeco-entity-image","alt",["s/.+/ai.panosai.html.metadata/"]]             
+    },
+
+
+        "formattedLocation": 
+        [
+        "span.topcard__flavor.topcard__flavor--bullet",
+        null,
+        []
+    ]
+        ,
+        
+        "formattedJobFunctions": [
+        "h3.description__job-criteria-subheader:contains('Job function') + span.description__job-criteria-text",
+        null,
+        []
+        ],
+
+        "country":[
+            "a.topcard__link",
+            "href",
+
+            ["/(\\w+)\\.linkedin\\.com\/","/.+?(?=\\.)/" ,"s/^/urn:li:fs_country:/","s/www/us/" ]  
+        ]
+        ,
+
+        "description":{
+            "text": [
+                "div.show-more-less-html__markup.show-more-less-html__markup--clamp-after-5",
+                "html()",
+                []]}
+        ,
+
+        "formattedIndustries": [
+            "h3.description__job-criteria-subheader:contains('Industries') + span.description__job-criteria-text",
+            null,
+            []
+        ],
+        "jobPostingId": [   
+            "code#decoratedJobPostingId",
+            "html()",
+            ["/\\d+/"]
+            
+        ],
+        "jobPostingUrl":[
+            "a.topcard__link",
+            "href",
+            ["/.+?(?=\\?)/"]
+        ],
+        
+        "formattedExperienceLevel":[
+            "h3.description__job-criteria-subheader:contains('Seniority level') + span.description__job-criteria-text",
+            null,
+            []
+            
+        ],
+        
+        "formattedEmploymentStatus":[
+            "h3.description__job-criteria-subheader:contains('Employment type') + span.description__job-criteria-text",
+            null,
+            []
+        ],
+        "title":[
+            "h2.top-card-layout__title",
+            null,
+            []
+        ]
+    },
+
+    "meta": {
+        "microSchema":{"version": ["img.artdeco-entity-image","alt",["s/.+/2/"]]},
+        "panosaiSchema": {"version": ["img.artdeco-entity-image","alt",["s/.+/1/"]]}
+            }
+}
+
+
+
+        
+
+
+    
