@@ -54,9 +54,9 @@ if __name__ == '__main__':
     
     max_processes = multiprocessing.cpu_count()
     
+    
 
-
-    with open('/html2json/template.json', 'r', encoding='utf-8') as tp:
+    with open('template.json', 'r', encoding='utf-8') as tp:
         template = json.load(tp)
         
         pool = Pool(processes=max_processes)
