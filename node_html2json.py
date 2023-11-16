@@ -12,10 +12,10 @@ from itertools import repeat
 
 
 
-def process_html(html_obj, template , obs_input , obs_output):
+def process_html(html_obj, template  , obs_input , obs_output):
     html_file_content = conn.obs.download_object(html_obj , obs_input)
-    html_file_metadata = conn.obs.get_object_metadata(html_obj , obs_input)
-    html_file_name = html_obj.key
+    html_file_metadata = conn.obs.get_object_metadata(html_obj , obs_output)
+    html_file_name = html_obj["Key"]
     
     json_file_name = str(html_file_name).replace('.html', '.json')
     
@@ -25,8 +25,9 @@ def process_html(html_obj, template , obs_input , obs_output):
     #    os.makedirs(target_folder)
     
     try:
-        data = collect('<html>' + html_file_content + f'<span class="creation-time">{html_file_metadata.LastModified}</span></html>', template)
-            
+        data = collect('<html>' + str(html_file_content) + f'<span class="creation-time">{html_file_metadata["LastModified"]}</span></html>', template)
+        #with open(json_file_name, 'w', encoding='utf-8') as f:
+        #    json.dump(data, f, ensure_ascii=False, indent=4)
         conn.obs.upload_object(name = json_file_name ,container =  obs_output , data = json.dumps(data))
 
     except Exception as e:
@@ -36,29 +37,29 @@ def process_html(html_obj, template , obs_input , obs_output):
 
 
 def generate_obs_obj(obs_container):
-    for html_obj in obs_container.objects():
-        if html_obj.key.endswith('.html'):
+    for html_obj in conn.obs.objects(obs_container):
+        if html_obj["Key"].endswith('.html'):
             yield html_obj
 
 if __name__ == '__main__':
     conn = openstack.connect()
     
-    for cont in conn.obs.containers():
-        if cont.name == 'companies-test':
-            obs_input = cont 
-        if cont.name == 'companies-test-output.panosai':
-            obs_output = cont       
+    #for cont in conn.obs.containers():
+    #    if cont.name == 'companies-test':
+    #        obs_input = cont 
+    #    if cont.name == 'companies-test':
+    #        obs_output = cont       
     #creation_time = os.path.getmtime(html_file)
 
-    obj_generator = generate_obs_obj(obs_input)
+    obj_generator = generate_obs_obj('companies-test')
     
     max_processes = multiprocessing.cpu_count()
     
-    
 
-    with open('template.json', 'r', encoding='utf-8') as tp:
+
+    with open('/html2json/template.json', 'r', encoding='utf-8') as tp:
         template = json.load(tp)
         
         pool = Pool(processes=max_processes)
-        for _ in tqdm(pool.starmap(process_html, zip(obj_generator, repeat(template),  repeat(obs_input), repeat(obs_output)))):
+        for _ in tqdm(pool.starmap(process_html, zip(obj_generator, repeat(template),  repeat('companies-test'), repeat('companies-test')))):
             pass
