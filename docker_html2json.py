@@ -11,16 +11,12 @@ import openstack
 
 
 def process_html(html_obj, template  , obs_input , obs_output):
+    """extract data from html files from object store""" 
     html_file_content = conn.obs.download_object(html_obj , obs_input)
     html_file_metadata = conn.obs.get_object_metadata(html_obj , obs_output)
     
     html_file_name = html_obj["Key"]
     json_file_name = str(html_file_name).replace('.html', '.json')
-    
-    #target_folder = os.path.dirname(json_file_name)
-    
-    #if not os.path.exists(target_folder):
-    #    os.makedirs(target_folder)
     
     try:
         data = collect('<html>' + str(html_file_content) + f'<span class="creation-time">{html_file_metadata["LastModified"]}</span></html>', template)
@@ -33,15 +29,42 @@ def process_html(html_obj, template  , obs_input , obs_output):
         with open('log.txt', 'a') as f:
             f.write(f'{html_file_name},{e}\n')
 
-def process_html_wrapper(args):
-    # Unpacking arguments and calling process_html function
-    return process_html(*args)
 
-
-def generate_obs_obj(obs_container):
-    for html_obj in conn.obs.objects(obs_container):
-        if html_obj["Key"].endswith('.html'):
+def create_folder_generator(container , folder):
+    for html_obj in conn.obs.objects(container ,headers={"prefix" :folder}):
+        if folder in html_obj['Key']:
             yield html_obj
+        else:
+            break    
+
+def process_folders(container,input_file, output_file):
+    try:
+        with open(input_file, 'r') as file:
+            folders = file.readlines()
+
+            # Process each folder
+            for folder in folders:
+                folder = folder.strip()  # Remove newline characters
+                
+            
+                
+
+                # Append the processed folder to the output file
+                with open(output_file, 'a') as processed_file:
+                    # check if the folder has already been processed skip it
+                    if folder in processed_file.read():
+                        continue
+                    else:
+                        processed_file.write(folder + '\n')
+                        gen = create_folder_generator(container , folder)
+
+                        for html in gen:
+                            process_html(html , template , container , 'companies-json-format')
+
+    except FileNotFoundError:
+        print("File not found!")
+    except Exception as e:
+        print(f"An error occurred: {e}")            
 
 if __name__ == '__main__':
     conn = openstack.connect()
@@ -53,11 +76,13 @@ if __name__ == '__main__':
     #        obs_output = cont       
     #creation_time = os.path.getmtime(html_file)
 
-    obj_generator = generate_obs_obj('companies-test')
+    
     os.chdir("/app")
     
     with open('/app/html2json/template.json', 'r', encoding='utf-8') as tp:
         template = json.load(tp)
+        
+        process_folders('jobs-html-original-new1' , 'queue.txt' , 'processed.txt')
 
         for html_obj in obj_generator:
             process_html(html_obj, template, 'companies-test','companies-json-format')
