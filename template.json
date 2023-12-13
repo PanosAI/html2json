@@ -1,14 +1,11 @@
 {
     "job": {
-        "companyDetails":{"company":[
-            "a.face-pile__cta",
-            "href",
-            ["/(?<=facetCurrentCompany%3D).+?(?=%)/" ,"s/^/urn:li:fs_normalized_company:/"]
-        ]},
+        "companyDetails":{
+            "company":["a.face-pile__cta","href",["/(?<=facetCurrentCompany%3D).+?(?=%)/"]],
+            "name":["img.artdeco-entity-image","alt",[]]
+        },
         
         "standardizedTitleResolutionResult":{
-            "$recipeType": ["img.artdeco-entity-image","alt",["s/.+/com.linkedin.voyager.deco.jobs.web.shared.WebFullTitle/"]],
-            "entityUrn": ["img.artdeco-entity-image","alt",["s/.+//"]],
             "localizedName": ["a.face-pile__cta","href",["/(?<=title%3D).+?(?=&)/", "s/%2B/ /g"]]
         }
         
@@ -16,7 +13,8 @@
         "sourceHtml":{
             "ListedRelative":["span.posted-time-ago__text",null,[]],   
             "CrawledAt":["span.creation-time",null,[]],
-            "$type":["img.artdeco-entity-image","alt",["s/.+/ai.panosai.html.metadata/"]]             
+            "SourcePath":["span.source-path",null,[]],
+            "SchemaVersion": ["img.artdeco-entity-image","alt",["s/.+/2/"]]           
     },
 
 
@@ -38,7 +36,7 @@
             "a.topcard__link",
             "href",
 
-            ["/(\\w+)\\.linkedin\\.com\/","/.+?(?=\\.)/" ,"s/^/urn:li:fs_country:/","s/www/us/" ]  
+            ["/(\\w+)\\.linkedin\\.com\/","/.+?(?=\\.)/" ,"s/www/us/" ]  
         ]
         ,
 
@@ -83,17 +81,5 @@
             null,
             []
         ]
-    },
-
-    "meta": {
-        "microSchema":{"version": ["img.artdeco-entity-image","alt",["s/.+/2/"]]},
-        "panosaiSchema": {"version": ["img.artdeco-entity-image","alt",["s/.+/1/"]]}
-            }
+    }
 }
-
-
-
-        
-
-
-    
